@@ -12,7 +12,6 @@ void show(MaChain& mc) {
 }
 
 
-
 int main() {
 	{
 		cout << MaChain().length() << endl;
@@ -55,8 +54,10 @@ int main() {
 		ch1.insert(ch, 5);
 		show(ch1);
 		std::swap(ch, ch1);
-		show(ch1);
-		show(ch);
+
+        Chain<MaChain> cch = { ch1, ch, MaChain({1e-2, 2e-3, 3e-4})};
+        for (Chain<MaChain>::iterator iter = cch.begin(); iter != cch.end(); ++iter)
+            show(*iter);
 	}
 		
 	system("pause");

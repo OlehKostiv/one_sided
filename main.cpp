@@ -11,6 +11,14 @@ void show(MaChain& mc) {
 	cout << endl;
 }
 
+MaChain range(int n) {
+    MaChain mc;
+    for (int i = 0; i < n;++i) {
+        mc.push_back(i);
+    }
+    return mc;
+}
+
 
 int main() {
 	{
@@ -54,8 +62,9 @@ int main() {
 		ch1.insert(ch, 5);
 		show(ch1);
 		std::swap(ch, ch1);
+        MaChain ch2 = range(10);
 
-        Chain<MaChain> cch = { ch1, ch, MaChain({1e-2, 2e-3, 3e-4})};
+        Chain<MaChain> cch = { ch1, ch, MaChain({1e-2, 2e-3, 3e-4}), range(15), ch2};
         for (Chain<MaChain>::iterator iter = cch.begin(); iter != cch.end(); ++iter)
             show(*iter);
 	}

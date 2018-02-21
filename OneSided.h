@@ -68,7 +68,7 @@ class Chain<T>::iterator:
 	public std::iterator<std::forward_iterator_tag, T>
 {	
 public:
-	T& operator *() const;
+	T& operator*() const;
 	PLink operator->() const;
 	iterator& operator++();
 
@@ -124,9 +124,10 @@ template<typename T>
 inline Chain<T>::Chain(Chain<T>&& other) :
 	first_element(other.first_element),
 	last_element(other.last_element),
-	zero_element(new Link<T>()),
+	zero_element(other.zero_element),
 	size(other.size)
 {
+    other.zero_element = new Link<T>();
 	other.reduce_to_zero();
 }
 
@@ -161,17 +162,7 @@ inline Chain<T>& Chain<T>::operator=(Chain<T>&& other){
 
 template<typename T>
 inline Chain<T>& Chain<T>::operator=(const Chain<T>& const other){
-	clean_up_to_zero();
-
-	Chain<T> other_copy(other);
-
-	first_element = other_copy.first_element;
-	last_element  = other_copy.last_element;
-	size  = other_copy.size;
-
-    other_copy.reduce_to_zero();
-
-    return *this;
+    return this* = static_cast<Chain<T>&&>(Chain<T>(other));
 }
 
 template<typename T> 
@@ -232,6 +223,8 @@ inline void Chain<T>::clean_up_to_zero(){
 	else
 		while (first_element != zero_element) {
 			PLink killer = first_element;
+            if (!killer)
+                break;
 			first_element = killer->next_element;
 				delete killer;
 		}
@@ -333,8 +326,8 @@ inline void Chain<T>::erase(int pos){
 	delete killer;
 
 	--size;
-	if (is_empty())
-		last_element = first_element;
+    if (is_empty())
+        reduce_to_zero();
 }
 
 template<typename T>
